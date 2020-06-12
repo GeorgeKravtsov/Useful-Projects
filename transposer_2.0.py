@@ -36,13 +36,13 @@ f_sharp_notes = {'F#': '1', 'G': '2', 'G#': '3', 'A': '4', 'A#': '5', 'H': '6', 
 g_notes = {'G': '1', 'Ab': '2', 'A': '3', 'Bb': '4', 'H': '5', 'C': '6', 'Db': '7', 'D': '8', 'Eb': '9', 'E': '10', 'F': '11', 'F#': '12'}
 ab_notes = {'Ab': '1', 'A': '2', 'Bb': '3', 'H': '4', 'C': '5', 'Db': '6', 'D': '7', 'Eb': '8', 'E': '9', 'F': '10', 'Gb': '11', 'G': '12'}
 a_notes = {'A': '1', 'Bb': '2', 'H': '3', 'C': '4', 'C#': '5', 'D': '6', 'Eb': '7', 'E': '8', 'F': '9', 'F#': '10', 'G': '11', 'G#': '12'}
-bb_notes = {'Bb': '1', 'H': '2', 'C': '3', 'Db': '4', 'D': '5', 'eb': '6', 'E': '7', 'F': '8', 'Gb': '9', 'G': '10', 'Ab': '11', 'A': '12'}
+bb_notes = {'Bb': '1', 'H': '2', 'C': '3', 'Db': '4', 'D': '5', 'Eb': '6', 'E': '7', 'F': '8', 'Gb': '9', 'G': '10', 'Ab': '11', 'A': '12'}
 h_notes = {'H': '1', 'C': '2', 'C#': '3', 'D': '4', 'D#': '5', 'E': '6', 'F': '7', 'F#': '8', 'G':'9', 'G#': '10', 'A': '11', 'A#': '12'}
 
 c_steps = {'1': 'C', '2': 'Db', '3': 'D', '4': 'Eb', '5': 'E', '6': 'F', '7': 'Gb', '8': 'G', '9': 'Ab', '10': 'A', '11': 'Bb', '12': 'H'}
 db_steps = {'1': 'Db', '2': 'D', '3': 'Eb', '4': 'E', '5': 'F', '6': 'Gb', '7': 'G', '8': 'Ab', '9': 'A', '10': 'Bb', '11': 'H', '12': 'C'}
 d_steps = {'1': 'D', '2': 'Eb', '3': 'E', '4': 'F', '5': 'F#', '6': 'G', '7': 'Ab', '8': 'A', '9': 'Bb', '10': 'H', '11': 'C', '12': 'C#'}
-eb_steps = {'1': 'Eb', '2': 'E', '3': 'F', '4': 'Gb', '5': 'G', '6': 'Ab', '7': 'a', '8': 'Bb', '9': 'H', '10': 'C', '11': 'Db', '12': 'D'}
+eb_steps = {'1': 'Eb', '2': 'E', '3': 'F', '4': 'Gb', '5': 'G', '6': 'Ab', '7': 'A', '8': 'Bb', '9': 'H', '10': 'C', '11': 'Db', '12': 'D'}
 e_steps = {'1': 'E', '2': 'F', '3': 'F#', '4': 'G', '5': 'G#', '6': 'A', '7': 'Bb', '8': 'H', '9': 'C', '10': 'C#', '11': 'D', '12': 'D#'}
 f_steps = {'1': 'F', '2': 'Gb', '3': 'G', '4': 'Ab', '5': 'A', '6': 'Bb', '7': 'H', '8': 'C', '9': 'Db', '10': 'D', '11': 'Eb', '12': 'E'}
 f_sharp_steps = {'1': 'F#', '2': 'G', '3': 'G#', '4': 'A', '5': 'A#', '6': 'H', '7': 'C', '8': 'C#', '9': 'D', '10': 'D#', '11': 'E', '12': 'F'}
@@ -67,7 +67,9 @@ while True:
     entered_user_chords[counter] = (user_chord_in_process[0].upper() + user_chord_in_process[1:] if len(
         user_chord_in_process) > 1 else user_chord_in_process.upper())  # запись аккордов в словарь {счётчик:аккорд}
     counter += 1                                                        # с переводом первого символа в верхний регистр
-    print('Chords in original key: ', [i for i in list(entered_user_chords.values()) if i])  # удаление пустой строки
+    print('Chords in original key, ',
+          '(' + original_key[0].upper() + original_key[1:] + '):' if len(original_key) > 1 else '(' + original_key.upper() + '):',
+          [i for i in list(entered_user_chords.values()) if i])  # удаление пустой строки
     if user_chord_in_process == '':  # (полученной в результате нажатия Enter для вывода аккордов в новой тональности)
         break                        # из списка введённых аккордов, отображаемых в процессе ввода
 
@@ -80,12 +82,15 @@ for number, chord in entered_user_chords.items():
         chords_no_tails.append(chord)
     elif len(chord) == 2 and (chord[1] == 'b' or chord[1] == '#'):
         chords_no_tails.append(chord)
-    elif len(chord) >= 2 and (chord[1] != 'b' or chord[1] != '#'):
-        chord_tails[number] = chord[1:]
+    elif len(chord) == 2 and (chord[1] != 'b' or chord[1] != '#'):
+        chord_tails[number] = chord[1]
         chords_no_tails.append(chord[0])
     elif len(chord) > 2 and (chord[1] == 'b' or chord[1] == '#'):
         chord_tails[number] = chord[2:]
         chords_no_tails.append(chord[:2])
+    elif len(chord) > 2 and (chord[1] != 'b' or chord[1] != '#'):
+        chord_tails[number] = chord[1:]
+        chords_no_tails.append(chord[:1])
 
 for symbol in chords_no_tails:          # словари, имена которых заканчиваются на _notes, состоят из элементов, ключами
     if original_key == 'am':            # которых являются аккордовые символы, значениями-номера ступеней лада, соответ-
@@ -137,7 +142,8 @@ for symbol in chords_no_tails:          # словари, имена котор�
     elif original_key == 'h':
         steps.append(h_notes[symbol])
 
-print('\nChords in new key: ')  # словари c именами на _steps: key: номер ступени лада; value: аккорд на этой ступени
+print('\nChords in new key, ',
+      '(' + new_key[0].upper() + new_key[1] + '):' if len(new_key) > 1 else '(' + new_key.upper() + '):')  # словари c именами на _steps: key: номер ступени лада; value: аккорд на этой ступени
 # сопоставление ступени c соответствующим ей аккордовым символом в новой тональности и конкатенацией полученного аккор-
 for step_number, step in enumerate(steps):  # дового символа с "окончанием" при условии, что оно для данного аккорда
     if new_key == 'am':  # имеется в словаре и вывод результата; иначе-вывод аккорда в новой тональности без "окончания"
@@ -155,20 +161,15 @@ for step_number, step in enumerate(steps):  # дового символа с "о
     elif new_key == 'gm':
         print(gm_steps[step] + chord_tails[step_number] if step_number in chord_tails else gm_steps[step], ' ', end=' ')
     elif new_key == 'bbm':
-        print(bbm_steps[step] + chord_tails[step_number] if step_number in chord_tails else bbm_steps[step], ' ',
-              end=' ')
+        print(bbm_steps[step] + chord_tails[step_number] if step_number in chord_tails else bbm_steps[step], ' ', end=' ')
     elif new_key == 'c#m':
-        print(c_sharp_m_steps[step] + chord_tails[step_number] if step_number in chord_tails else c_sharp_m_steps[step],
-              ' ', end=' ')
+        print(c_sharp_m_steps[step] + chord_tails[step_number] if step_number in chord_tails else c_sharp_m_steps[step], ' ', end=' ')
     elif new_key == 'ebm':
-        print(ebm_steps[step] + chord_tails[step_number] if step_number in chord_tails else ebm_steps[step], ' ',
-              end=' ')
+        print(ebm_steps[step] + chord_tails[step_number] if step_number in chord_tails else ebm_steps[step], ' ', end=' ')
     elif new_key == 'f#m':
-        print(f_sharp_m_steps[step] + chord_tails[step_number] if step_number in chord_tails else f_sharp_m_steps[step],
-              ' ', end=' ')
+        print(f_sharp_m_steps[step] + chord_tails[step_number] if step_number in chord_tails else f_sharp_m_steps[step], ' ', end=' ')
     elif new_key == 'g#m':
-        print(g_sharp_m_steps[step] + chord_tails[step_number] if step_number in chord_tails else g_sharp_m_steps[step],
-              ' ', end=' ')
+        print(g_sharp_m_steps[step] + chord_tails[step_number] if step_number in chord_tails else g_sharp_m_steps[step], ' ', end=' ')
     elif new_key == 'c':
         print(c_steps[step] + chord_tails[step_number] if step_number in chord_tails else c_steps[step], ' ', end=' ')
     elif new_key == 'd':
