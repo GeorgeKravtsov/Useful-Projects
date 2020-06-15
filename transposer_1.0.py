@@ -1,37 +1,35 @@
 '***************************************************TRANSPOSER 1.0****************************************************'
-# Программа производит транспозицию введённых пользователем аккордов в указанную пользователем тональность.
-# Транспозиция возможна в каждую из 12 тональностей мажора и минора.
-# На данный момент поддерживаются только диатонические аккордовые последовательности.
-# Принцип работы программы следующий: по приглашению "Original key:" пользователь вводит оригинальную тональность,
-# например, Am, затем по приглашению "New key:" вводит требуемую тональность, например, Hm, после чего по приглашению
-# "Enter chord:" последовательно вводит аккордовые символы, например Am7, Dm9, E13 и т.д., нажимая после каждого
-# аккордового символа клавишу Enter. После каждого нажатия Enter на экран выводится введённая пользователем аккордовая
-# последовательность в оригинальной тональности в виде списка, помещённого в симолы [], например:
-# 'Chords in original key: ['Am7', 'G11', 'C6', 'Dm7', 'E13', 'Am9']; при этом аккордовые символы и тональности можно
-# вводить в нижнем регистре (первая буква аккордового символа и тональности преобразуется в верхний регистр).
-# Вводимые пользователем аккордовые символы становятся значениями в словаре entered_user_chords, ключами которого
-# служат числа от 0, добавляющиеся автоматически и увеличивающиеся на 1 после каждого нажатия клавиши Enter при
-# каком-либо введённом аккордовом символе. Для выведения на экран аккордовой последовательности в новой тональности
-# необходимо нажать Enter в приглашении "Enter chord:", ничего не вводя перед этим.
-# При нажатии Enter после пустой строки в приглашении "Enter chord:" из словаря entered_user_chords удаляется последний
-# введённый элемент, значением которого является пустая строка, которая возникает после нажатия Enter без какого-либо
-# символьного ввода с целью вывода на экран аккордовой последовательности в новой тональности.
-# Если аккордовый символ НЕ оканчивается на '6/9', '6', '7', '9', '11', '13', 'maj', 'aug', 'add2', 'add9', 'sus',
-# 'b5#5', т. е. выглядит как 'Am', 'Dm', 'C' и т. д., то этот символ добавляется в конец списка chords_no_digits.
-# В противном случае от аккордового символа с помощью среза [] отсекается любое из представленных выше "окончаний",
-# которое вносится в словарь chords_digits, ключами которого становятся ключи словаря entered_user_chords, чтобы служить
-# порядковыми номерами окончаний для последующей корректной конкатенации с соответствующим аккордовым символом в новой
-# тональности.
-# Далее каждый аккордовый символ из списка chords_no_digits сопоставляется со значением в словаре x_notes (порядковым
-# номером ступени лада), где x - введённая пользователем оригинальная тональность. В результате сопоставления порядковый
-# номер ступени каждого из введёных пользователем аккордов вносится в список steps (ступени аккордов).
-# После этого каждый элемент списка steps сопоставляется со значением в словаре y_steps (буквенным обозначением ступени
-# аккорда в новой тональности), где y - введённая пользователем новая тональность.
-# Буквенные обозначения аккордов в новой тональности конкатенируются с "окончаниями" аккордов из словаря chords_digits
-# только в том случае, если индекс (НЕ НОМЕР СТУПЕНИ ЛАДА) ступени в списке steps соответствует номеру "окончания" в
-# словаре chords_digits. В противном случае аккордовый символ в новой тональности выводится без "окончания".
-# Результатом выполнения программы является строка введённых пользователем аккордовых символов в указанной пользователем
-# тональности, например: 'Chords in new key:
+# The program transposes user-entered chords into the key specified by the user.
+# Transposition is possible in each of the 12 major and minor keys.
+# Only diatonic chord progressions are currently supported.
+# The principle of the program is as follows: at the invitation of "Original key:" the user enters the original key,
+# for example, Am, then at the prompt "New key:" enters the required key, for example, Hm, then at the invitation
+# "Enter chord:" sequentially enters chord symbols, for example Am7, Dm9, E13, etc., pressing Enter key after each
+# chord character. Each time after pressing Enter, the chord entered by the user is displayed a progression in the
+# original key in the form of a list placed in sims [], for example:
+# 'Chords in original key: [' Am7 ',' G11 ',' C6 ',' Dm7 ',' E13 ',' Am9 ']; chord symbols and keys can be entered in
+# lower case (the first letter of the chord symbol and key is converted to upper case automatically).
+# User-entered chord symbols become values ​​in the dictionary entered_user_chords, whose keys are numbers from 0, added
+# automatically and increasing by 1 after each press of the Enter key when any chord symbol entered. To display a chord
+# sequence in a new key you must press Enter at the prompt "Enter chord:" without entering anything before.
+# When you press Enter after an empty line at the "Enter chord:" prompt, the last entered element whose value is an
+# empty string, that occurs after pressing Enter without anything to display a chord sequence in a new key, becomes
+# deleted from the entered_user_chords dictionary.
+# If the chord symbol does NOT end with '6/9', '6', '7', '9', '11', '13', 'maj', 'aug', 'add2', 'add9', 'sus ','b5 # 5',
+# that is, it looks like 'Am', 'Dm', 'C', etc., this character is added to the end of the chords_no_digits list.
+# Otherwise, any of the “endings” presented above is cut off from the chord symbol which is entered in the chords_digits
+# dictionary, whose keys are the keys of the entered_user_chords dictionary to serve sequence numbers of the "endings"
+# for the subsequent correct concatenation with the corresponding chord symbol in the new key.
+# Next, each chord symbol from the chords_no_digits list is mapped to a value in the x_notes dictionary (ordinal step
+# number), where x is the original key entered by the user. As a result of matching, ordinal the number of the step of
+# each of the chords entered by the user is entered in the steps list (chord steps).
+# After that, each element of the steps list is mapped to a value in the y_steps dictionary (the letter designation of
+# the step chord in a new key), where y is the new key entered by the user.
+# Chord lettering in the new key concatenates with the "endings" of chords from the chords_digits dictionary only if the
+# index (NOT SCALE STEP NUMBER) of the step in the steps list corresponds to the "end" number in dictionary
+# chords_digits. Otherwise, the chord symbol in the new key is displayed without a "ending".
+# The result of the program execution is a string of chord characters entered by the user in the user specified key,
+# for example: 'Chords in a new key:
 #                         Hm7   A11   D6   Em7   F#13   Hm9'.
 
 am_notes = {'Am': '1', 'H dim': '2', 'C': '3', 'Dm': '4', 'E': '5', 'F': '6', 'G': '7'}
@@ -93,23 +91,23 @@ print("""\t\tWelcome to TRANSPOSER 1.0!
 * Press Enter after empty string in invitation 'Enter chord: ' to get progression in a new key.""")
 
 entered_user_chords = {}
-steps = []                                      # список ступеней аккордовых символов, введённых пользователем
+steps = []                                     # list of chord symbol steps entered by the user
 original_key = input('Original key: ').lower()
 new_key = input('New key: ').lower()
-counter = 0                  # автоинкрементный счётчик порядковых номеров аккордовых символов, введённых пользователем
+counter = 0                             # auto-increment ordinal numbers counter of chord characters entered by the user
 
 while True:
     user_chord_in_process = input('Enter chord: ')
     entered_user_chords[counter] = (user_chord_in_process[0].upper() + user_chord_in_process[1:] if len(
-        user_chord_in_process) > 1 else user_chord_in_process.upper())  # запись аккордов в словарь {счётчик:аккорд}
-    counter += 1                                                        # с переводом первого символа в верхний регистр
-    print('Chords in original key: ', [i for i in list(entered_user_chords.values()) if i])  # удаление пустой строки
-    if user_chord_in_process == '':  # (полученной в результате нажатия Enter для вывода аккордов в новой тональности)
-        break                        # из списка введённых аккордов, отображаемых в процессе ввода
+        user_chord_in_process) > 1 else user_chord_in_process.upper())  # writing chords into the dictionary
+    counter += 1                                                        # {counter:chord}, uppercase first character
+    print('Chords in original key: ', [i for i in list(entered_user_chords.values()) if i])  # delete empty line
+    if user_chord_in_process == '':  # (received by pressing Enter to display chords in a new key) from the list of
+        break                        # entered chords displayed during input
 
-entered_user_chords.popitem()        # удаление элемента {counter: ''}
-chords_digits = {}                   # {number(counter): tail} ({счётчик: "хвост("окончание")" аккорда})
-chords_no_digits = []                # аккорды без "окончаний"
+entered_user_chords.popitem()  # deleting the element {counter: ''}
+chords_digits = {}             # {number (counter): tail} ({counter: "end" of the chord})
+chords_no_digits = []          # chords without "endings"
 
 for number, chord in entered_user_chords.items():
     if not chord.endswith('6') and not chord.endswith('7') \
@@ -117,14 +115,14 @@ for number, chord in entered_user_chords.items():
             and not chord.endswith('13') and not chord.endswith('aug') \
             and not chord.endswith('(add2)') and not chord.endswith('(add9)') \
             and not chord.endswith('sus') and not chord.endswith('maj') \
-            and not chord.endswith('(6/9)') and not chord.endswith('b5#5'):  # если введённый аккордовый символ не имеет
-        chords_no_digits.append(chord)  # "окончания" (имеет вид Am, C и т. д.), он вносится в список в неизменном виде
-    elif chord.endswith('6') or chord.endswith('7') or chord.endswith('9'):  # в случае наличия "окончания" оно отделя-
-        chords_digits[number] = chord[-1]  # ется от начала аккорда и помещается в словарь, где ключом является порядко-
-        chords_no_digits.append(chord[:-1])  # вый номер аккорда в момент его ввода, необходимый для сохранения порядка
-    elif chord.endswith('11') or chord.endswith('13'):  # следования аккордовых символов и их "окончаний" при их после-
-        chords_digits[number] = chord[-2:]  # дующем соединении; аккордовый символ, отделённый от "окончания", помеща-
-        chords_no_digits.append(chord[:-2])  # ется в список аккордов без окончаний
+            and not chord.endswith('(6/9)') and not chord.endswith('b5#5'):  # if the entered chord symbol does not have
+        chords_no_digits.append(chord)  # an “ending” (has the form Am, C, etc.), it is entered in the list unchanged
+    elif chord.endswith('6') or chord.endswith('7') or chord.endswith('9'):  # if there is an “ending”, it is separated
+        chords_digits[number] = chord[-1]  # from the beginning of the chord and placed in the dictionary, where the key
+        chords_no_digits.append(chord[:-1])  # is the number of the chord at the time of its entry, necessary to pre-
+    elif chord.endswith('11') or chord.endswith('13'):  # serve the order of the chord symbols and their “endings” du-
+        chords_digits[number] = chord[-2:]  # ring their subsequent connection; a chord symbol separated from the
+        chords_no_digits.append(chord[:-2])  # “ending” is placed in the list of chords without endings
     elif chord.endswith('aug') or chord.endswith('sus') or chord.endswith('maj'):
         chords_digits[number] = chord[-3:]
         chords_no_digits.append(chord[:-3])
@@ -138,16 +136,16 @@ for number, chord in entered_user_chords.items():
         chords_digits[number] = chord[-6:]
         chords_no_digits.append(chord[:-6])
 
-for symbol in chords_no_digits:         # словари, имена которых заканчиваются на _notes, состоят из элементов, ключами
-    if original_key == 'am':            # которых являются аккордовые символы, значениями-номера ступеней лада, соответ-
-        steps.append(am_notes[symbol])  # ствующих этим символам
+for symbol in chords_no_digits:         # dictionaries whose names end with _notes consist of elements whose keys are
+    if original_key == 'am':            # chord symbols, the values ​​are the numbers of the fret stages corresponding
+        steps.append(am_notes[symbol])  # to these symbols
     elif original_key == 'hm':
-        steps.append(hm_notes[symbol])  # каждый аккордовый символ из списка сопоставляется со ступенью, которой он со-
-    elif original_key == 'cm':          # ответствует в тональности, указанной пользователем как 'Original key'
+        steps.append(hm_notes[symbol])  # each chord symbol from the list is mapped to the step to which it corresponds
+    elif original_key == 'cm':          # in the key specified by the user as the 'Original key'
         steps.append(cm_notes[symbol])
-    elif original_key == 'dm':          # в результате получаются ступени введённых пользователем аккордовых символов,
-        steps.append(dm_notes[symbol])  # которые вносятся в список ступеней для последующего сопоставления их с аккор-
-    elif original_key == 'em':          # довыми символами в тональности, указанной пользователем как 'New key'
+    elif original_key == 'dm':          # as a result, the steps are entered by the user chord symbols, which are
+        steps.append(dm_notes[symbol])  # entered in the list of steps for subsequent comparison with chord symbols in
+    elif original_key == 'em':          # the key specified by the user as 'New key'
         steps.append(em_notes[symbol])
     elif original_key == 'fm':
         steps.append(fm_notes[symbol])
@@ -188,54 +186,80 @@ for symbol in chords_no_digits:         # словари, имена котор�
     elif original_key == 'gb':
         steps.append(gb_notes[symbol])
 
-print('\nChords in new key: ')  # словари c именами на _steps: key: номер ступени лада; value: аккорд на этой ступени
-# сопоставление ступени c соответствующим ей аккордовым символом в новой тональности и конкатенацией полученного аккор-
-for step_number, step in enumerate(steps):  # дового символа с "окончанием" при условии, что оно для данного аккорда
-    if new_key == 'am':  # имеется в словаре и вывод результата; иначе-вывод аккорда в новой тональности без "окончания"
-        print(am_steps[step] + chords_digits[step_number] if step_number in chords_digits else am_steps[step], ' ', end=' ')
+print('\nChords in a new key: ')  # dictionaries with names on _steps:
+                                  # key: number of the step level; value: chord at this level
+
+# mapping the step with the corresponding chord symbol in a new key and concatenating the resulting chord symbol with
+for step_number, step in enumerate(steps):  # the "ending", provided that it is in the dictionary for the given chord
+    if new_key == 'am':  # and displaying of the result; otherwise - displaying of chords in a new key without "ending"
+        print(am_steps[step] + chords_digits[step_number] if step_number in chords_digits else am_steps[step], ' ',
+              end=' ')
     elif new_key == 'hm':
-        print(hm_steps[step] + chords_digits[step_number] if step_number in chords_digits else hm_steps[step], ' ', end=' ')
+        print(hm_steps[step] + chords_digits[step_number] if step_number in chords_digits else hm_steps[step], ' ',
+              end=' ')
     elif new_key == 'cm':
-        print(cm_steps[step] + chords_digits[step_number] if step_number in chords_digits else cm_steps[step], ' ', end=' ')
+        print(cm_steps[step] + chords_digits[step_number] if step_number in chords_digits else cm_steps[step], ' ',
+              end=' ')
     elif new_key == 'dm':
-        print(dm_steps[step] + chords_digits[step_number] if step_number in chords_digits else dm_steps[step], ' ', end=' ')
+        print(dm_steps[step] + chords_digits[step_number] if step_number in chords_digits else dm_steps[step], ' ',
+              end=' ')
     elif new_key == 'em':
-        print(em_steps[step] + chords_digits[step_number] if step_number in chords_digits else em_steps[step], ' ', end=' ')
+        print(em_steps[step] + chords_digits[step_number] if step_number in chords_digits else em_steps[step], ' ',
+              end=' ')
     elif new_key == 'fm':
-        print(fm_steps[step] + chords_digits[step_number] if step_number in chords_digits else fm_steps[step], ' ', end=' ')
+        print(fm_steps[step] + chords_digits[step_number] if step_number in chords_digits else fm_steps[step], ' ',
+              end=' ')
     elif new_key == 'gm':
-        print(gm_steps[step] + chords_digits[step_number] if step_number in chords_digits else gm_steps[step], ' ', end=' ')
+        print(gm_steps[step] + chords_digits[step_number] if step_number in chords_digits else gm_steps[step], ' ',
+              end=' ')
     elif new_key == 'bbm':
-        print(bbm_steps[step] + chords_digits[step_number] if step_number in chords_digits else bbm_steps[step], ' ', end=' ')
+        print(bbm_steps[step] + chords_digits[step_number] if step_number in chords_digits else bbm_steps[step], ' ',
+              end=' ')
     elif new_key == 'c#m':
-        print(c_sharp_m_steps[step] + chords_digits[step_number] if step_number in chords_digits else c_sharp_m_steps[step], ' ', end=' ')
+        print(c_sharp_m_steps[step] + chords_digits[step_number] if step_number in chords_digits else c_sharp_m_steps[
+            step], ' ', end=' ')
     elif new_key == 'ebm':
-        print(ebm_steps[step] + chords_digits[step_number] if step_number in chords_digits else ebm_steps[step], ' ', end=' ')
+        print(ebm_steps[step] + chords_digits[step_number] if step_number in chords_digits else ebm_steps[step], ' ',
+              end=' ')
     elif new_key == 'f#m':
-        print(f_sharp_m_steps[step] + chords_digits[step_number] if step_number in chords_digits else f_sharp_m_steps[step], ' ', end=' ')
+        print(f_sharp_m_steps[step] + chords_digits[step_number] if step_number in chords_digits else f_sharp_m_steps[
+            step], ' ', end=' ')
     elif new_key == 'g#m':
-        print(g_sharp_m_steps[step] + chords_digits[step_number] if step_number in chords_digits else g_sharp_m_steps[step], ' ', end=' ')
+        print(g_sharp_m_steps[step] + chords_digits[step_number] if step_number in chords_digits else g_sharp_m_steps[
+            step], ' ', end=' ')
     elif new_key == 'c':
-        print(c_steps[step] + chords_digits[step_number] if step_number in chords_digits else c_steps[step], ' ', end=' ')
+        print(c_steps[step] + chords_digits[step_number] if step_number in chords_digits else c_steps[step], ' ',
+              end=' ')
     elif new_key == 'd':
-        print(d_steps[step] + chords_digits[step_number] if step_number in chords_digits else d_steps[step], ' ', end=' ')
+        print(d_steps[step] + chords_digits[step_number] if step_number in chords_digits else d_steps[step], ' ',
+              end=' ')
     elif new_key == 'e':
-        print(e_steps[step] + chords_digits[step_number] if step_number in chords_digits else e_steps[step], ' ', end=' ')
+        print(e_steps[step] + chords_digits[step_number] if step_number in chords_digits else e_steps[step], ' ',
+              end=' ')
     elif new_key == 'f':
-        print(f_steps[step] + chords_digits[step_number] if step_number in chords_digits else f_steps[step], ' ', end=' ')
+        print(f_steps[step] + chords_digits[step_number] if step_number in chords_digits else f_steps[step], ' ',
+              end=' ')
     elif new_key == 'g':
-        print(g_steps[step] + chords_digits[step_number] if step_number in chords_digits else g_steps[step], ' ', end=' ')
+        print(g_steps[step] + chords_digits[step_number] if step_number in chords_digits else g_steps[step], ' ',
+              end=' ')
     elif new_key == 'a':
-        print(a_steps[step] + chords_digits[step_number] if step_number in chords_digits else a_steps[step], ' ', end=' ')
+        print(a_steps[step] + chords_digits[step_number] if step_number in chords_digits else a_steps[step], ' ',
+              end=' ')
     elif new_key == 'h':
-        print(h_steps[step] + chords_digits[step_number] if step_number in chords_digits else h_steps[step], ' ', end=' ')
+        print(h_steps[step] + chords_digits[step_number] if step_number in chords_digits else h_steps[step], ' ',
+              end=' ')
     elif new_key == 'db':
-        print(db_steps[step] + chords_digits[step_number] if step_number in chords_digits else db_steps[step], ' ', end=' ')
+        print(db_steps[step] + chords_digits[step_number] if step_number in chords_digits else db_steps[step], ' ',
+              end=' ')
     elif new_key == 'eb':
-        print(eb_steps[step] + chords_digits[step_number] if step_number in chords_digits else eb_steps[step], ' ', end=' ')
+        print(eb_steps[step] + chords_digits[step_number] if step_number in chords_digits else eb_steps[step], ' ',
+              end=' ')
     elif new_key == 'bb':
-        print(bb_steps[step] + chords_digits[step_number] if step_number in chords_digits else bb_steps[step], ' ', end=' ')
+        print(bb_steps[step] + chords_digits[step_number] if step_number in chords_digits else bb_steps[step], ' ',
+              end=' ')
     elif new_key == 'ab':
-        print(ab_steps[step] + chords_digits[step_number] if step_number in chords_digits else ab_steps[step], ' ', end=' ')
+        print(ab_steps[step] + chords_digits[step_number] if step_number in chords_digits else ab_steps[step], ' ',
+              end=' ')
     elif new_key == 'gb':
-        print(gb_steps[step] + chords_digits[step_number] if step_number in chords_digits else gb_steps[step], ' ', end=' ')
+        print(gb_steps[step] + chords_digits[step_number] if step_number in chords_digits else gb_steps[step], ' ',
+              end=' ')
