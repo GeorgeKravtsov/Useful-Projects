@@ -141,26 +141,26 @@ print("""\t\t\tWelcome to TRANSPOSER 2.0!
 * Press Enter after empty string in invitation 'Enter chord: ' to get progression in a new key.""")
 
 entered_user_chords = {}
-steps = []  # список ступеней аккордовых символов, введённых пользователем
+steps = []  # list of chord symbol steps entered by the user
 original_key = input('Original key: ').lower()
 new_key = input('New key: ').lower()
-counter = 0  # автоинкрементный счётчик порядковых номеров аккордовых символов, введённых пользователем
+counter = 0  # auto-increment ordinal numbers counter of chord characters entered by the user
 
 while True:
     user_chord_in_process = input('Enter chord: ')
     entered_user_chords[counter] = (user_chord_in_process[0].upper() + user_chord_in_process[1:] if len(
-        user_chord_in_process) > 1 else user_chord_in_process.upper())  # запись аккордов в словарь {счётчик:аккорд}
-    counter += 1                                                        # с переводом первого символа в верхний регистр
+        user_chord_in_process) > 1 else user_chord_in_process.upper())  # writing chords into the dictionary
+    counter += 1                                                        # {counter:chord}, uppercase first character
     print('Chords in original key, ',
           '(' + original_key[0].upper() + original_key[1:] + '):' if len(original_key) > 1
           else '(' + original_key.upper() + '):',
-          [i for i in list(entered_user_chords.values()) if i])  # удаление пустой строки
-    if user_chord_in_process == '':  # (полученной в результате нажатия Enter для вывода аккордов в новой тональности)
-        break                        # из списка введённых аккордов, отображаемых в процессе ввода
+          [i for i in list(entered_user_chords.values()) if i])  # delete empty line
+    if user_chord_in_process == '':  # (received by pressing Enter to display chords in a new key) from the list of
+        break                        # entered chords displayed during input
 
-entered_user_chords.popitem()  # удаление элемента {counter: ''}
-chord_tails = {}               # {number(counter): tail} ({счётчик: "хвост("окончание")" аккорда})
-chords_no_tails = []           # аккорды без "окончаний"
+entered_user_chords.popitem()  # deleting the element {counter: ''}
+chord_tails = {}               # {number (counter): tail} ({counter: "end" of the chord})
+chords_no_tails = []           # chords without "endings"
 
 for number, chord in entered_user_chords.items():
     if len(chord) == 1:
@@ -177,20 +177,20 @@ for number, chord in entered_user_chords.items():
         chord_tails[number] = chord[1:]
         chords_no_tails.append(chord[:1])
 
-for symbol in chords_no_tails:          # словари, имена которых заканчиваются на _notes, состоят из элементов, ключами
-    if original_key == 'am':            # которых являются аккордовые символы, значениями-номера ступеней лада, соответ-
-        steps.append(am_notes[symbol])  # ствующих этим символам
+for symbol in chords_no_tails:          # dictionaries whose names end with _notes consist of elements whose keys are
+    if original_key == 'am':            # chord symbols, the values ​​are the numbers of the fret stages corresponding
+        steps.append(am_notes[symbol])  # to these symbols
     elif original_key == 'bbm':
         steps.append(bbm_notes[symbol])
     elif original_key == 'hm':
-        steps.append(hm_notes[symbol])  # каждый аккордовый символ из списка сопоставляется со ступенью, которой он со-
-    elif original_key == 'cm':          # ответствует в тональности, указанной пользователем как 'Original key'
+        steps.append(hm_notes[symbol])  # each chord symbol from the list is mapped to the step to which it corresponds
+    elif original_key == 'cm':          # in the key specified by the user as the 'Original key'
         steps.append(cm_notes[symbol])
     elif original_key == 'c#m':
         steps.append(c_sharp_m_notes[symbol])
-    elif original_key == 'dm':          # в результате получаются ступени введённых пользователем аккордовых символов,
-        steps.append(dm_notes[symbol])  # которые вносятся в список ступеней для последующего сопоставления их с аккор-
-    elif original_key == 'ebm':         # довыми символами в тональности, указанной пользователем как 'New key'
+    elif original_key == 'dm':          # as a result, the steps are entered by the user chord symbols, which are
+        steps.append(dm_notes[symbol])  # entered in the list of steps for subsequent comparison with chord symbols in
+    elif original_key == 'ebm':         # the key specified by the user as 'New key'
         steps.append(ebm_notes[symbol])
     elif original_key == 'em':
         steps.append(em_notes[symbol])
@@ -229,11 +229,11 @@ for symbol in chords_no_tails:          # словари, имена котор�
 
 print('\nChords in new key, ',
       '(' + new_key[0].upper() + new_key[1] + '):' if len(new_key) > 1 else '(' + new_key.upper() + '):')
-# словари c именами на _steps: key: номер ступени лада; value: аккорд на этой ступени
+# dictionaries with names on _steps: key: number of the step level; value: chord at this level
 
-# сопоставление ступени c соответствующим ей аккордовым символом в новой тональности и конкатенацией полученного аккор-
-for step_number, step in enumerate(steps):  # дового символа с "окончанием" при условии, что оно для данного аккорда
-    if new_key == 'am':  # имеется в словаре и вывод результата; иначе-вывод аккорда в новой тональности без "окончания"
+# mapping the step with the corresponding chord symbol in a new key and concatenating the resulting chord symbol with
+for step_number, step in enumerate(steps):  # the "ending", provided that it is in the dictionary for the given chord
+    if new_key == 'am':  # and displaying of the result; otherwise - displaying of chords in a new key without "ending"
         print(am_steps[step] + chord_tails[step_number] if step_number in chord_tails else am_steps[step], ' ', end=' ')
     elif new_key == 'hm':
         print(hm_steps[step] + chord_tails[step_number] if step_number in chord_tails else hm_steps[step], ' ', end=' ')
