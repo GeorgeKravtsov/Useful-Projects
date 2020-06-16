@@ -1,40 +1,40 @@
 '***************************************************TRANSPOSER 2.0****************************************************'
-# Обновлённая версия Transposer 1.0 производит транспозицию введённой пользователем аккордовой последовательности в
-# указанную им тональность. Транспозиция производится в каждую из 12 тональностей мажора и минора. Главное отличие вер-
-# сии 2.0 - поддержка хроматических ступеней в аккордовых последовательностях, отсутствие которой существенно ограничи-
-# вало функциональность версии 1.0. Принцип работы 2.0 также отличается менее жёстким кодированием возможных случаев.
-# Принцип работы программы следующий: по приглашению "Original key:" пользователь вводит оригинальную тональность,
-# например, Am, затем по приглашению "New key:" вводит требуемую тональность, например, Hm, после чего по приглашению
-# "Enter chord:" последовательно вводит аккордовые символы, например Am7, Dm9, E13 и т.д., нажимая после каждого
-# аккордового символа клавишу Enter. После каждого нажатия Enter на экран выводится введённая пользователем аккордовая
-# последовательность в оригинальной тональности в виде списка, помещённого в симолы [], например:
-# 'Chords in original key: ['Am7', 'G11', 'C6', 'Dm7', 'E13', 'Am9']; при этом аккордовые символы и тональности можно
-# вводить в нижнем регистре (первая буква аккордового символа и тональности преобразуется в верхний регистр).
-# Вводимые пользователем аккордовые символы становятся значениями в словаре entered_user_chords, ключами которого
-# служат числа от 0, добавляющиеся автоматически и увеличивающиеся на 1 после каждого нажатия клавиши Enter при
-# каком-либо введённом аккордовом символе. Для выведения на экран аккордовой последовательности в новой тональности
-# необходимо нажать Enter в приглашении "Enter chord:", ничего не вводя перед этим.
-# При нажатии Enter после пустой строки в приглашении "Enter chord:" из словаря entered_user_chords удаляется последний
-# введённый элемент, значением которого является пустая строка, которая возникает после нажатия Enter без какого-либо
-# символьного ввода с целью вывода на экран аккордовой последовательности в новой тональности.
-# Нежёсткое кодирование возможных случаев проявляется в отсутствии явного указания всех возможных "окончаний" аккордовых
-# символов, варианты которых предугадать, чтобы указать явно, практически невозможно.
-# Если вторым элементом введённого пользователем аккордового символа не является 'b' или '#', то от этого символа отсе-
-# каается всё, что находится после первого элемента т.н. "окончание" (при условии его наличия). "Окончание" помещается в
-# словарь chord_tails в качестве значения; ключами в словаре chord_tails являются порядковые номера аккордовых символов,
-# введённых пользователем (они же - ключи словаря entered_user_chords), но начинающиеся с 0 (это необходимо для последу-
-# ющей корректной конкатенации "окончаний" с первыми элементами аккордовых символов в новой тональности, сопоставление
-# происходит по индексу, который начинается с 0).Первый элемент аккордового символа помещается в список chords_no_tails.
-# Далее каждый элемент из списка chords_no_tails сопоставляется со значением в словаре x_notes (порядковым номером сту-
-# пени лада), где x - введённая пользователем оригинальная тональность. В результате сопоставления порядковый номер
-# ступени каждого из введёных пользователем аккордов вносится в список steps (ступени аккордов).
-# После этого каждый элемент списка steps сопоставляется со значением в словаре y_steps (буквенным обозначением ступени
-# аккорда в новой тональности), где y - введённая пользователем новая тональность.
-# Буквенные обозначения аккордов в новой тональности конкатенируются с "окончаниями" аккордов из словаря chords_digits
-# только в том случае, если индекс (НЕ НОМЕР СТУПЕНИ ЛАДА) ступени в списке steps соответствует номеру "окончания" в
-# словаре chords_digits. В противном случае аккордовый символ в новой тональности выводится без "окончания".
-# Результатом выполнения программы является строка введённых пользователем аккордовых символов в указанной пользователем
-# тональности, например: 'Chords in new key:
+# The updated version of Transposer 1.0 transposes the user-entered chord sequence into the key specified by user.
+# Transposition is possible in each of the 12 keys of major and minor. The main difference between version 2.0 is the
+# support of chromatic steps in chord progressions, the absence of which significantly limited the functionality of
+# version 1.0. The principle of operation 2.0 also differs by less rigid coding of possible cases.
+# The principle of the program is as follows: at the invitation of "Original key:" the user enters the original key,
+# for example, Am, then at the prompt "New key:" enters the required key, for example, Hm, then at the invitation
+# "Enter chord:" sequentially enters chord symbols, for example Am7, Dm9, E13, etc., pressing Enter key after each
+# chord character. Each time after pressing Enter, the chord entered by the user is displayed a progression in the
+# original key in the form of a list placed in sims [], for example:
+# 'Chords in original key: [' Am7 ',' G11 ',' C6 ',' Dm7 ',' E13 ',' Am9 ']; chord symbols and keys can be entered in
+# lower case (the first letter of the chord symbol and key is converted to upper case automatically).
+# User-entered chord symbols become values ​​in the dictionary entered_user_chords, whose keys are numbers from 0, added
+# automatically and increasing by 1 after each press of the Enter key when any chord symbol entered. To display a chord
+# sequence in a new key you must press Enter at the prompt "Enter chord:" without entering anything before.
+# When you press Enter after an empty line at the "Enter chord:" prompt, the last entered element whose value is an
+# empty string, that occurs after pressing Enter without anything to display a chord sequence in a new key, becomes
+# deleted from the entered_user_chords dictionary.
+# Non-rigid coding of possible cases is manifested in the absence of an explicit indication of all possible "endings" of
+# the chord characters whose predictions to indicate explicitly are almost impossible.
+# If the second element of the user-entered chord symbol is not 'b' or '#', then this symbol will be deselected every-
+# thing that is after the first element of the so-called "end" (subject to availability). The "ending" is placed in
+# dictionary chord_tails as value; the keys in the chord_tails dictionary are the sequence numbers of the chord
+# characters, entered by the user (they are also entered_user_chords dictionary keys), but starting with 0 (this is
+# necessary for the subsequent correct concatenation of "endings" with the first elements of chord characters in a new
+# key, matching occurs at an index that starts at 0). The first element of the chord symbol is placed in the
+# chords_no_ tails list.
+# Next, each item from the chords_no_tails list is mapped to a value in the x_notes dictionary (index number of scale
+# step), where x is the original key entered by the user. As a result of matching, the serial number the steps of each
+# of the chords entered by the user are entered in the steps list (chord steps).
+# After that, each element of the steps list is mapped to a value in the y_steps dictionary (the letter designation of
+# the step chord in a new key), where y is the new key entered by the user.
+# Chord lettering in the new key concatenates with the "endings" of chords from the chords_digits dictionary only if the
+# index (NOT SCALE STEP NUMBER) of the step in the steps list corresponds to the "end" number in dictionary
+# chords_digits. Otherwise, the chord symbol in the new key is displayed without a "ending".
+# The result of the program execution is a string of chord characters entered by the user in the user specified key,
+# for example: 'Chords in new key:
 #                         Hm7   A11   D6   Em7   F#13   Hm9'.
 am_notes = {'A': '1', 'Bb': '2', 'H': '3', 'C': '4', 'C#': '5', 'D': '6', 'Eb': '7', 'E': '8', 'F': '9', 'F#': '10',
             'G': '11', 'G#': '12'}
