@@ -36,6 +36,7 @@
 # The result of the program execution is a string of chord characters entered by the user in the user specified key,
 # for example: 'Chords in new key:
 #                         Hm7   A11   D6   Em7   F#13   Hm9'.
+
 am_notes = {'A': '1', 'Bb': '2', 'H': '3', 'C': '4', 'C#': '5', 'D': '6', 'Eb': '7', 'E': '8', 'F': '9', 'F#': '10',
             'G': '11', 'G#': '12'}
 bbm_notes = {'Bb': '1', 'H': '2', 'C': '3', 'Db': '4', 'D': '5', 'Eb': '6', 'E': '7', 'F': '8', 'Gb': '9', 'G': '10',
@@ -162,128 +163,142 @@ entered_user_chords.popitem()  # deleting the element {counter: ''}
 chord_tails = {}               # {number (counter): tail} ({counter: "end" of the chord})
 chords_no_tails = []           # chords without "endings"
 
-for number, chord in entered_user_chords.items():
-    if len(chord) == 1:
-        chords_no_tails.append(chord)
-    elif len(chord) == 2 and (chord[1] == 'b' or chord[1] == '#'):
-        chords_no_tails.append(chord)
-    elif len(chord) == 2 and (chord[1] != 'b' or chord[1] != '#'):
-        chord_tails[number] = chord[1]
-        chords_no_tails.append(chord[0])
-    elif len(chord) > 2 and (chord[1] == 'b' or chord[1] == '#'):
-        chord_tails[number] = chord[2:]
-        chords_no_tails.append(chord[:2])
-    elif len(chord) > 2 and (chord[1] != 'b' or chord[1] != '#'):
-        chord_tails[number] = chord[1:]
-        chords_no_tails.append(chord[:1])
 
-for symbol in chords_no_tails:          # dictionaries whose names end with _notes consist of elements whose keys are
-    if original_key == 'am':            # chord symbols, the values ​​are the numbers of the fret stages corresponding
-        steps.append(am_notes[symbol])  # to these symbols
-    elif original_key == 'bbm':
-        steps.append(bbm_notes[symbol])
-    elif original_key == 'hm':
-        steps.append(hm_notes[symbol])  # each chord symbol from the list is mapped to the step to which it corresponds
-    elif original_key == 'cm':          # in the key specified by the user as the 'Original key'
-        steps.append(cm_notes[symbol])
-    elif original_key == 'c#m':
-        steps.append(c_sharp_m_notes[symbol])
-    elif original_key == 'dm':          # as a result, the steps are entered by the user chord symbols, which are
-        steps.append(dm_notes[symbol])  # entered in the list of steps for subsequent comparison with chord symbols in
-    elif original_key == 'ebm':         # the key specified by the user as 'New key'
-        steps.append(ebm_notes[symbol])
-    elif original_key == 'em':
-        steps.append(em_notes[symbol])
-    elif original_key == 'fm':
-        steps.append(fm_notes[symbol])
-    elif original_key == 'f#m':
-        steps.append(f_sharp_m_notes[symbol])
-    elif original_key == 'gm':
-        steps.append(gm_notes[symbol])
-    elif original_key == 'g#m':
-        steps.append(g_sharp_m_notes[symbol])
-    elif original_key == 'c':
-        steps.append(c_notes[symbol])
-    elif original_key == 'db':
-        steps.append(db_notes[symbol])
-    elif original_key == 'd':
-        steps.append(d_notes[symbol])
-    elif original_key == 'eb':
-        steps.append(eb_notes[symbol])
-    elif original_key == 'e':
-        steps.append(e_notes[symbol])
-    elif original_key == 'f':
-        steps.append(f_notes[symbol])
-    elif original_key == 'f#':
-        steps.append(f_sharp_steps[symbol])
-    elif original_key == 'g':
-        steps.append(g_notes[symbol])
-    elif original_key == 'ab':
-        steps.append(ab_notes[symbol])
-    elif original_key == 'a':
-        steps.append(a_notes[symbol])
-    elif original_key == 'bb':
-        steps.append(bb_notes[symbol])
-    elif original_key == 'h':
-        steps.append(h_notes[symbol])
+def first_symbol_and_tail_separate(entered_user_chords):
+    for number, chord in entered_user_chords.items():
+        if len(chord) == 1:
+            chords_no_tails.append(chord)
+        elif len(chord) == 2 and (chord[1] == 'b' or chord[1] == '#'):
+            chords_no_tails.append(chord)
+        elif len(chord) == 2 and (chord[1] != 'b' or chord[1] != '#'):
+            chord_tails[number] = chord[1]
+            chords_no_tails.append(chord[0])
+        elif len(chord) > 2 and (chord[1] == 'b' or chord[1] == '#'):
+            chord_tails[number] = chord[2:]
+            chords_no_tails.append(chord[:2])
+        elif len(chord) > 2 and (chord[1] != 'b' or chord[1] != '#'):
+            chord_tails[number] = chord[1:]
+            chords_no_tails.append(chord[:1])
+
+
+first_symbol_and_tail_separate(entered_user_chords)
+
+
+def receipt_mask_of_steps(chords_no_tails):
+    for symbol in chords_no_tails:          # dictionaries whose names end with _notes consist of elements whose keys
+        if original_key == 'am':            # are chord symbols, the values ​​are the numbers of the fret stages
+            steps.append(am_notes[symbol])  # corresponding to these symbols
+        elif original_key == 'bbm':
+            steps.append(bbm_notes[symbol])
+        elif original_key == 'hm':
+            steps.append(
+                hm_notes[symbol])                   # each chord symbol from the list is mapped to the step
+        elif original_key == 'cm':                  # to which it corresponds in the key specified by the user
+            steps.append(cm_notes[symbol])          # as the 'Original key'
+        elif original_key == 'c#m':
+            steps.append(c_sharp_m_notes[symbol])
+        elif original_key == 'dm':                  # as a result, the steps are entered by the user chord symbols,
+            steps.append(dm_notes[symbol])          # which are entered in the list of steps for subsequent comparison
+        elif original_key == 'ebm':                 # with chord symbols in the key specified by the user as 'New key'
+            steps.append(ebm_notes[symbol])
+        elif original_key == 'em':
+            steps.append(em_notes[symbol])
+        elif original_key == 'fm':
+            steps.append(fm_notes[symbol])
+        elif original_key == 'f#m':
+            steps.append(f_sharp_m_notes[symbol])
+        elif original_key == 'gm':
+            steps.append(gm_notes[symbol])
+        elif original_key == 'g#m':
+            steps.append(g_sharp_m_notes[symbol])
+        elif original_key == 'c':
+            steps.append(c_notes[symbol])
+        elif original_key == 'db':
+            steps.append(db_notes[symbol])
+        elif original_key == 'd':
+            steps.append(d_notes[symbol])
+        elif original_key == 'eb':
+            steps.append(eb_notes[symbol])
+        elif original_key == 'e':
+            steps.append(e_notes[symbol])
+        elif original_key == 'f':
+            steps.append(f_notes[symbol])
+        elif original_key == 'f#':
+            steps.append(f_sharp_steps[symbol])
+        elif original_key == 'g':
+            steps.append(g_notes[symbol])
+        elif original_key == 'ab':
+            steps.append(ab_notes[symbol])
+        elif original_key == 'a':
+            steps.append(a_notes[symbol])
+        elif original_key == 'bb':
+            steps.append(bb_notes[symbol])
+        elif original_key == 'h':
+            steps.append(h_notes[symbol])
+
+
+receipt_mask_of_steps(chords_no_tails)
+
 
 print('\nChords in new key, ',
       '(' + new_key[0].upper() + new_key[1] + '):' if len(new_key) > 1 else '(' + new_key.upper() + '):')
-# dictionaries with names on _steps: key: number of the step level; value: chord at this level
+# dictionaries with names on _steps: key: number of the step level; value: chord at this step
 
-# mapping the step with the corresponding chord symbol in a new key and concatenating the resulting chord symbol with
-for step_number, step in enumerate(steps):  # the "ending", provided that it is in the dictionary for the given chord
-    if new_key == 'am':  # and displaying of the result; otherwise - displaying of chords in a new key without "ending"
-        print(am_steps[step] + chord_tails[step_number] if step_number in chord_tails else am_steps[step], ' ', end=' ')
-    elif new_key == 'hm':
-        print(hm_steps[step] + chord_tails[step_number] if step_number in chord_tails else hm_steps[step], ' ', end=' ')
-    elif new_key == 'cm':
-        print(cm_steps[step] + chord_tails[step_number] if step_number in chord_tails else cm_steps[step], ' ', end=' ')
-    elif new_key == 'dm':
-        print(dm_steps[step] + chord_tails[step_number] if step_number in chord_tails else dm_steps[step], ' ', end=' ')
-    elif new_key == 'em':
-        print(em_steps[step] + chord_tails[step_number] if step_number in chord_tails else em_steps[step], ' ', end=' ')
-    elif new_key == 'fm':
-        print(fm_steps[step] + chord_tails[step_number] if step_number in chord_tails else fm_steps[step], ' ', end=' ')
-    elif new_key == 'gm':
-        print(gm_steps[step] + chord_tails[step_number] if step_number in chord_tails else gm_steps[step], ' ', end=' ')
-    elif new_key == 'bbm':
-        print(bbm_steps[step] + chord_tails[step_number] if step_number in chord_tails else bbm_steps[step], ' ',
-              end=' ')
-    elif new_key == 'c#m':
-        print(c_sharp_m_steps[step] + chord_tails[step_number] if step_number in chord_tails else c_sharp_m_steps[step],
-              ' ', end=' ')
-    elif new_key == 'ebm':
-        print(ebm_steps[step] + chord_tails[step_number] if step_number in chord_tails else ebm_steps[step], ' ',
-              end=' ')
-    elif new_key == 'f#m':
-        print(f_sharp_m_steps[step] + chord_tails[step_number] if step_number in chord_tails else f_sharp_m_steps[step],
-              ' ', end=' ')
-    elif new_key == 'g#m':
-        print(g_sharp_m_steps[step] + chord_tails[step_number] if step_number in chord_tails else g_sharp_m_steps[step],
-              ' ', end=' ')
-    elif new_key == 'c':
-        print(c_steps[step] + chord_tails[step_number] if step_number in chord_tails else c_steps[step], ' ', end=' ')
-    elif new_key == 'd':
-        print(d_steps[step] + chord_tails[step_number] if step_number in chord_tails else d_steps[step], ' ', end=' ')
-    elif new_key == 'e':
-        print(e_steps[step] + chord_tails[step_number] if step_number in chord_tails else e_steps[step], ' ', end=' ')
-    elif new_key == 'f':
-        print(f_steps[step] + chord_tails[step_number] if step_number in chord_tails else f_steps[step], ' ', end=' ')
-    elif new_key == 'g':
-        print(g_steps[step] + chord_tails[step_number] if step_number in chord_tails else g_steps[step], ' ', end=' ')
-    elif new_key == 'a':
-        print(a_steps[step] + chord_tails[step_number] if step_number in chord_tails else a_steps[step], ' ', end=' ')
-    elif new_key == 'h':
-        print(h_steps[step] + chord_tails[step_number] if step_number in chord_tails else h_steps[step], ' ', end=' ')
-    elif new_key == 'db':
-        print(db_steps[step] + chord_tails[step_number] if step_number in chord_tails else db_steps[step], ' ', end=' ')
-    elif new_key == 'eb':
-        print(eb_steps[step] + chord_tails[step_number] if step_number in chord_tails else eb_steps[step], ' ', end=' ')
-    elif new_key == 'bb':
-        print(bb_steps[step] + chord_tails[step_number] if step_number in chord_tails else bb_steps[step], ' ', end=' ')
-    elif new_key == 'ab':
-        print(ab_steps[step] + chord_tails[step_number] if step_number in chord_tails else ab_steps[step], ' ', end=' ')
-    elif new_key == 'f#':
-        print(f_sharp_steps[step] + chord_tails[step_number] if step_number in chord_tails else f_sharp_steps[step],
-              ' ', end=' ')
+
+def new_key_symbols_and_tails_mapping(steps):
+    """mapping the step with the corresponding chord symbol in a new key
+    and concatenating the resulting chord symbol with the ending',
+    provided that it is in the dictionary for the given chord and displaying of the result;
+    otherwise - displaying of chords in a new key without 'ending'"""
+    for step_number, step in enumerate(steps):
+        if new_key == 'am':
+            print(am_steps[step] + chord_tails[step_number] if step_number in chord_tails else am_steps[step], ' ', end=' ')
+        elif new_key == 'hm':
+            print(hm_steps[step] + chord_tails[step_number] if step_number in chord_tails else hm_steps[step], ' ', end=' ')
+        elif new_key == 'cm':
+            print(cm_steps[step] + chord_tails[step_number] if step_number in chord_tails else cm_steps[step], ' ', end=' ')
+        elif new_key == 'dm':
+            print(dm_steps[step] + chord_tails[step_number] if step_number in chord_tails else dm_steps[step], ' ', end=' ')
+        elif new_key == 'em':
+            print(em_steps[step] + chord_tails[step_number] if step_number in chord_tails else em_steps[step], ' ', end=' ')
+        elif new_key == 'fm':
+            print(fm_steps[step] + chord_tails[step_number] if step_number in chord_tails else fm_steps[step], ' ', end=' ')
+        elif new_key == 'gm':
+            print(gm_steps[step] + chord_tails[step_number] if step_number in chord_tails else gm_steps[step], ' ', end=' ')
+        elif new_key == 'bbm':
+            print(bbm_steps[step] + chord_tails[step_number] if step_number in chord_tails else bbm_steps[step], ' ', end=' ')
+        elif new_key == 'c#m':
+            print(c_sharp_m_steps[step] + chord_tails[step_number] if step_number in chord_tails else c_sharp_m_steps[step], ' ', end=' ')
+        elif new_key == 'ebm':
+            print(ebm_steps[step] + chord_tails[step_number] if step_number in chord_tails else ebm_steps[step], ' ', end=' ')
+        elif new_key == 'f#m':
+            print(f_sharp_m_steps[step] + chord_tails[step_number] if step_number in chord_tails else f_sharp_m_steps[step], ' ', end=' ')
+        elif new_key == 'g#m':
+            print(g_sharp_m_steps[step] + chord_tails[step_number] if step_number in chord_tails else g_sharp_m_steps[step], ' ', end=' ')
+        elif new_key == 'c':
+            print(c_steps[step] + chord_tails[step_number] if step_number in chord_tails else c_steps[step], ' ', end=' ')
+        elif new_key == 'd':
+            print(d_steps[step] + chord_tails[step_number] if step_number in chord_tails else d_steps[step], ' ', end=' ')
+        elif new_key == 'e':
+            print(e_steps[step] + chord_tails[step_number] if step_number in chord_tails else e_steps[step], ' ', end=' ')
+        elif new_key == 'f':
+            print(f_steps[step] + chord_tails[step_number] if step_number in chord_tails else f_steps[step], ' ', end=' ')
+        elif new_key == 'g':
+            print(g_steps[step] + chord_tails[step_number] if step_number in chord_tails else g_steps[step], ' ', end=' ')
+        elif new_key == 'a':
+            print(a_steps[step] + chord_tails[step_number] if step_number in chord_tails else a_steps[step], ' ', end=' ')
+        elif new_key == 'h':
+            print(h_steps[step] + chord_tails[step_number] if step_number in chord_tails else h_steps[step], ' ', end=' ')
+        elif new_key == 'db':
+            print(db_steps[step] + chord_tails[step_number] if step_number in chord_tails else db_steps[step], ' ', end=' ')
+        elif new_key == 'eb':
+            print(eb_steps[step] + chord_tails[step_number] if step_number in chord_tails else eb_steps[step], ' ', end=' ')
+        elif new_key == 'bb':
+            print(bb_steps[step] + chord_tails[step_number] if step_number in chord_tails else bb_steps[step], ' ', end=' ')
+        elif new_key == 'ab':
+            print(ab_steps[step] + chord_tails[step_number] if step_number in chord_tails else ab_steps[step], ' ', end=' ')
+        elif new_key == 'f#':
+            print(f_sharp_steps[step] + chord_tails[step_number] if step_number in chord_tails else f_sharp_steps[step], ' ', end=' ')
+
+
+new_key_symbols_and_tails_mapping(steps)
